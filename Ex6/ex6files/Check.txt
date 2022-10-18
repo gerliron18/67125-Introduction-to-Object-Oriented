@@ -1,0 +1,22 @@
+//hello
+String hello = "Hello";
+
+//number
+int num = 24;
+
+void main(num){
+num = num ++;
+}
+
+void ifCheck(){
+if(true){
+num = num --;
+}
+}
+
+void whileCheck(){
+while(true){
+num = num +1;
+}
+return;
+}

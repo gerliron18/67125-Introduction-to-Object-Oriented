@@ -1,0 +1,151 @@
+adi.simhi
+gerliron18
+
+=============================
+= File description =
+=============================
+main package:
+    Sjavac - A class that manages and runs the whole program - from getting the Sjava file need to be checked
+             to returning a number represent if the file is legal.
+filePartition package:
+    Block - A class that represent a code block and checks is legality.
+    InnerPartition - A class that manage the inner partition of Sjava code file means of the block,lines,
+                     statements and methods
+    Partition - A class that manage the partition of Sjava code file to block,lines, statements and methods
+exceptions package:
+    BadAssignment - An exception class that manage bad assignment.
+    BadSyntax - An exception class that manage bad syntax.
+    GeneralException - An exception class that manage general exceptions.
+    InvalidProgramUsage - An exception class that manage invalid program usage.
+    IOError - An exception class that manage IO errors.
+codeTypes package:
+    BooleanVariable - A class that represent a boolean expression as a type of variable and checks
+                      is legality. Will create a boolean instance if is legal.
+    CharVariable - A class that represent a Char expression as a type of variable and checks is legality.
+                   Will create a Char instance if is legal.
+    DoubleVariable - A class that represent a double expression as a type of variable and checks is legality.
+                     Will create a double instance if is legal.
+    IntVariable - A class that represent an integer expression as a type of variable and checks is legality.
+                  Will create an int instance if is legal.
+    StringVariable - A class that represent a string expression as a type of variable and checks is legality.
+                     Will create a string instance if is legal.
+    Variable - An abstract class that manage a variable expression.
+    VariableFactory - A factory class that creates an instances by expressions.
+methods package:
+    FactoryMethod - A factory class that creates an instances of methods by code block expressions.
+    Function - A class that represent a function block and checks is legality.
+statement package:
+    IfStatement - A class that represent an If statement expression as a type of statements.
+    StatementFactory - A factory class that creates statements instances by expressions.
+    WhileLoopStatement - A class that represent a While loop statement expression as a type of statements.
+
+=============================
+= Design =
+=============================
+As part of choosing the right design for our program we decided to take the problem with which we are
+trying to deal, examine the Java code file, and try to dismantle it into the smallest parts we can
+while maintaining the necessary rules according to the instructions of the exercise.
+We wanted the chosen design to fulfill as many design principles as we have learned,
+and therefore we have used modularity, abstract classes and factories.
+
+Note that the program is divided into several packages according to the parts we thought Java code
+should enforce such as methods, statements and variables. In addition, we chose to divide the code file
+into blocks from the largest and the most extensive to the level of the unit code line.
+
+For exceptions, we chose to create a package with all the possible exceptions that could be thrown during
+the code check, as opposed to the principle we learned in the lecture, This is because we wanted to avoid
+double code that would load the running of the program, The rule of encountering this and what is different
+between each other is the message that is injected and crawls up the program until it thrown to the screen.
+
+The design we choose fulfills the open-closed principle since the program is operated by a single main
+department so that the client does not have to know about all the tests that take place behind
+the program run. In addition, if we want to add additional code elements or further testing down the road
+we can do so without any change in the code already registered except the addition of individual conditions
+in the factory classes and the creation of the new classes we want to add.
+From the above explanation, our program adheres to the principle of single-choice.
+
+=============================
+= Implementation details =
+=============================
+Further to the above post, we decided to divide our program into parts according to the factors we saw fit
+and those that we were asked to check in the code file.
+First, we chose a single master file through which the program can be run so that it runs the classes itself
+and eventually performs all the tests to be performed and prints to the screen both the appropriate answer
+and the exception messages if necessary - that's the Sjavac class in the main package.
+Later on, we saw fit to divide the code file we received into parts from the largest and the widest of them
+to the level of the unit code line. Therefore, we opened a package called file partition and there are
+departments that perform the initial division and beyond the code file for example, the comment lines,
+and to the level where we identify opening and closing code block, identify what its kind, and send it to
+another department for handling.
+As noted above, we have decided to open a package of exceptions to avoid duplicate code so that each class
+in the code that throws an exception throws it with an appropriate message that seeps into the main file
+and eventually prints to the screen, from the rule that we saw fit for our program to throw.
+Now, the three remaining packages are parts of the codes to which we should refer - Variables, Methods
+and Statements.
+In each of these packages we built a factory classes that receives all the information it must obtain
+in order to identify what kind of code it is, whether it is a while loop or what type of variable -
+Boolean, char or a string.
+In addition, after the creation of instances of the relevant code they will generated all the tests they
+should be enforced and eventually the information seeps upward and the result is printed to the screen.
+
+=============================
+= Answers to questions =
+=============================
+* Error Handling
+  As we mentioned earlier, we decided to create an exception package so that our main department - general
+  exception, which extends the Java Exception class and in addition to which we have built additional
+  outstanding departments that expand the rule and each of which deals with output From a certain rule
+  depending on the problem encountered during the running of the program. If an exception is thrown,
+  an outstanding item will be thrown with an appropriate notice
+
+* How would you modify your code to add new types of variables (e.g., float)?
+  If we want to add additional variables to our program, all we need to do is create a new class according
+  to the tests to be done for the new variable and add to the factory class of variables that has already
+  written for us the possibility of receiving a variable of this type. All this is possible because,
+  as we mentioned earlier, we have maintained an open-closed principle that allows us to add additional
+  options to the program without changing its general structure or the code already written except
+  for secondary additions.
+
+* Below are four features your program currently does not support. Please select two of them,
+  and describe which modifications/extensions you would have to make in your code in order to support them.
+  Please briefly describe which classes you would add to your code, which methods you would add to existing
+  classes, and which classes you would modify. You are not required to implement these features.
+
+  - Different methods’ types (i.e int foo())
+    According to the instruction file of the exercise we had to support very specific methods and therefore
+    our method package does not contain many classes but it is built so that if we want to add support
+    of our program in other methods we all need to do, like adding variables, is to create a new class
+    according to the method we want to support, this class will extend the existing method class,
+    and we will need to add to the method factory class the option to create a new instance of this method.
+
+  - Using methods of standard java (i.e System.out.println).
+    To add to our program the possibility to recognize basic Java commands such as printing we can create
+    an array list containing all the commands we want the code to recognize and then when we reach the part
+    of the code in which we look at a single line of code, we can recognize this code and act accordingly
+    while iteration on all commands in the array list against the given line of code. In fact, we can add
+    this test by adding the array list we specified and one other method that performs the iteration.
+    We think that the right place to add those functions is in the partition classes where at the same time
+    we identify comments lines.
+
+* Describe two of the main regular expressions you used in your code.
+
+  - VARIABLE_DECLARATION_REGEX = "^\\s*(?:(final)\\s+)?(int|String|double|boolean|char)\\s+(.*?)\\s*;\\s*$";
+
+    This regex is used to identify variables declaration written in the given code.
+    First, you can notice that throughout the expression we do not attribute importance to the amount of
+    spaces that appear in the same line of code but rather look at the self-evident expressions as individuals
+    and their meaning. For example, you can see that this expression supports the option that variable will be
+    declared as final or not and it should be one of the types we should support such as Boolean
+    or Double variable, and then comes the name of the variable that the user has chosen to give
+    and there is no restriction on it. Finally, the line of code for this declaration must end with
+    a semicolon that is an extension to a Java code line.
+
+  - EMPTY_LINE_OR_COMMENT_REGEX = "^(//.*|\\s*)$";
+
+    We thought this regex is important to the initialize of our program, this expression is used to carry
+    out a filter of empty lines and comment lines in the code that was obtained as a primary and important
+    filtering, which separates the main thing from the handling of the code that we received. This expression
+    identifies lines that begin with a "//" that is a comment line but also identifies empty rows that encode
+    the code. Once we identify these lines of code we get rid of them by claiming that they do not change
+    the integrity of the code and only delay the handling of the code and therefore we use it
+    at the beginning of the program.
