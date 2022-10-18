@@ -1,0 +1,34 @@
+gerliron18
+308350503
+Liron Gershuny
+
+
+=============================
+=      File description     =
+=============================
+Book.java - implements the Book class.
+Patron.java - implements the Patron class.
+Library.java - implements the Library class.
+
+
+=============================
+=          Design           =
+=============================
+The design factor of this exercise has implemented for me by the course so I didn't get any options
+to make a lot of considerations, above all that I chose to seperate between methods in order
+to make the script more readable and easy to understand.
+
+
+=============================
+=  Implementation details   =
+=============================
+In the Library class, I had to implement some limitations at some methods so that the library will act
+like a real library, for example- when book is returned to it, the method will check if the Id of
+the book and so te patron is valid so in real life when the local library can add a book that was
+in her position at first place.
+
+
+=============================
+=    Answers to questions   =
+=============================
+This exercise had no questions in it.
