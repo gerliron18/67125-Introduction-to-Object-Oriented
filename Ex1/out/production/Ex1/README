@@ -1,0 +1,69 @@
+gerliron18
+308350503
+Liron Gershuny
+
+
+=============================
+=      File description     =
+=============================
+Board.java - implementation of Nim game board class, implemented by the course staff.
+Move.java - implementation of Nim game move class, implemented by me.
+Player.java - implementation of Nim game player class, skeleton implementation by course staff
+              and all rest by me.
+Competition.java - implementation of Nim game competition class and the main method of the program,
+                   skeleton implementation by course staff and all rest by me.
+
+
+=============================
+=          Design           =
+=============================
+The design factor at this program was according to the course staff guidelines. Never the less, I chose to
+separate much more of the methods I needed to implement so it will be more readable and easy to understand
+the program.
+
+
+=============================
+=  Implementation details   =
+=============================
+The Move class implemented according to the API guide with no extensions.
+
+At the Player class I needed to implement the game moves of human player, random player and smart one so
+each kind of them could take part of playing the Nim game as it implemented at the Competition class. The
+heuristic player was implemented by the course staff.
+
+For the random player I chose to work with an array that consider each of the valid moves according to the
+current state of the game board, choose one randomly with no winning considerations.
+
+For the human player I implemented it according to the course staff guidelines so the instructions will
+be printed to the screen so a human player will understand it very well (according to guidelines- no need
+to take any considerations of invalid presses).
+
+For the smart player I founded at the net a convenient way to win this kind of Nim game - more about it you
+can find at the "Answers to questions" section below as it asked by the course staff guidelines.
+
+The Competition class skeleton had only few methods so the I needed to implement the most part of it.
+First of all, I initialized all the field that the guidelines wanted me to and I added the "score" fields
+so it will be easier for me to follow each player score. To manage the game flow I chose to work with two
+main methods- the single round game and a multiple rounds of game so that the multiple one will use the
+single one- make no repetition of code. The single round begin with initializing board object and make a
+player object that will use the ones from the constructor. Then, I used two while loops that will come to end
+when all the game sticks are marked. Additionally, it will manage the messages that will be printed to the
+screen and calculating the total scores for each player.
+Finally, this class defines the main method at the end of it, in general it will initialize the scanner
+object, the players (according to type) and a competition object with those players. Will call the multiple
+rounds method and will end when the game is done according to the given arguments.
+
+=============================
+=    Answers to questions   =
+=============================
+Explanation to the smart player winning strategy:
+The strategy used by my smart player founded at a website that explain that in order to win a Nim game
+you need to attempt to ensure that an odd number of unmarked sticks remain after you preform your move,
+when this is possible of course. This method will make your opponent make the last move and lose the game.
+So, my smart player method start with initializing a move object that will get the chosen move at the end,
+than initialize an array of possible valid moves according to the current state of the game board.
+Next, it will check if the number of the remaining unmarked sticks on board count to an odd number,
+iterate over the possible moves and check if the current move will mark an even number of sticks on board
+so the total unmarked sticks on board after preforming this move will count to an odd number.
+Finally, if the current move is a one that will preserve a winning situation like it explained above-
+this move will be chosen by the method, otherwise the last legal move will take place.
