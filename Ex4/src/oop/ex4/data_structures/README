@@ -1,0 +1,80 @@
+gerliron18
+drordod
+
+
+=============================
+= File description =
+=============================
+TreeNode - Represent a node in a tree which hold the value, the left and right sons and parent.
+           Furthermore, hold the depth and height of it inside a tree and hold the methods to update those
+            values
+BinaryTree - An implementation of the binary tree data structure.
+AVLTree - An implementation of the AVL tree data structure.
+
+
+=============================
+= Design =
+=============================
+We decided to split the design to the different objects to be used in different classes.
+From DAST class we learned that AVL Tree is a kind of BST tree, so we created the BinaryTree class and AVLTree
+ extend this class, meaning it uses all the methods it implement.
+The BST hold the values in different objects of TreeNode, each has a parent, left and right son, and keep its
+depth and height
+
+=============================
+= Implementation details =
+=============================
+TreeNode - every time a node changes it's parent, or have another son we update the height and depth of the
+tree recursively, meaning we go up the tree till we get to the root and update this information.
+
+BinaryTree - We learned in DAST that the add and delete of nodes are identical to all BST types except the
+fixing of the notation of the tree. This is why we implemented the add\delete\contains function in the
+
+BinaryTree and added two helper functions which being called after adding\deletion of the node:
+additionFixNotation and deletionFixNotation: every class which extend the BinaryTree and want to fix a
+notation after addition and deletion will need to override those method.
+
+The add method works as we learned in DAST: find the node which the new value would have been it's son and
+create a new node as right\left son.
+
+The delete method works as we learned in DAST: if the node is a leaf, delete it. If the node is not a leaf
+find the successor of this node and replace them - than remove the successor which is always a leaf.
+The AVL fix the notation by using right and left rotation as we learned in DAST, different combination of
+those rotation in different situation based on the direction of the disturbance and the direction we climbed
+from the disturbance to the node which notation should be fixed.
+
+The findMaxNodes method - Calculates the maximum number of nodes in an AVL tree of height h by using the
+equation learned in DAST - The minimal number of nodes for a tree with height h is 2^(h+1) - 1, meaning the
+BST is a complete tree.
+
+The findMinNodes method - Calculates the minimum number of nodes in an AVL tree of height h by using the
+equation learned in DAST - The minimal number of nodes for an avl tree with height h is S(h-1) + S(h-2) + 1 so
+ we loop on an index until we have S(h)
+
+
+=============================
+= Answers to questions =
+=============================
+5.1 - The sequence to create a 12 node tree in height 4 is: 10,5,20,4,7,15,25,6,14,24,26,27
+5.2.1 - The running time of AvlTree(int[] data) is nlog(n) - running in loop for all the element in data is O
+(n) and the add method takes O(log(n)) because each time we find the next node to add, and update the height
+and rotate which together takes log(n) and depends on the height of the tree.
+5.2.2 - The best possible run time for this method is O(n) - we proved in DAST that if we get a sorted array
+we can create an AVL tree by always taking the middle index inside the array and putting it as the root, than
+recursively splitting the array into two were the left son of the root will be the middle index in the left
+array and the right son of the root will be the middle index in the right array
+5.3.1 - The running time of AvlTree(BinaryTree tree) is nlog(n). Each time we want to add a new value from the
+ old tree to the new one we find the successor of the old node which take O(log(n)), we do this for all the
+ nodes so we do this action for O(n) times, than we add this new value in another O(log(n)) - this mean that
+ the runtime is n(log(n) + log(n)) = O(nlog(n))
+5.3.2 - The best runtime is O(n) - if we can deep copy all the element one after the other, ascending by the
+location of the node and not the value (meaning root, left son, right son and etc) than we could just copy all
+ the information of the nodes without needing to traverse up and down the tree to update the variable and
+ check the notation
+5.4.1 - The runtime is O(h) as required, we run a for-loop until the index got to h to calculate the height
+and hold the last 2 calculated height, which leaves us in O(1) memory wise.
+5.4.2 - The best runtime is O(1) using the golden ratio equation, we learned in DISCRETE MATHEMATICS that a
+fibonacci series can be calculated in O(1) using the golden ratio const and the min number of nodes in a tree
+is a kind of fibonacci series so we can use this.
+
+
