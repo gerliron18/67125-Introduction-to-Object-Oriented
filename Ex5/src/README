@@ -1,0 +1,262 @@
+c.goldstein
+gerliron18
+
+=============================
+= File description =
+=============================
+**** fileprocessing package: ****
+DirectoryProcessor - A class that manages and runs the whole program, from getting the args to returning
+                     a list of the files according to the instructions in the command file.
+ParseData - This class manages parsing the data given in the command file
+            (Filter1 Array and Order Array operations).
+Section - A class representing a Section object. A section object holds two fields - a filter and an order.
+TypeOneExceptions - A class representing a TypeOneException. These exceptions include bad filter/order names,
+                    bad parameter names, and illegal values for the filters.
+TypeTwoExceptions - Exception that catch an error due to problems related to the source directory,
+                    command file (including bad format of the file) and IO problems.
+
+**** filtersPackage: *****
+Filter - An interface for a Filter object which can filter files according to given parameters.
+FilterDecorator - A class that allows to add decorators to a filter object.
+FilterFactory - A factory that creates filter items according the given parameters (and decorators,
+                if applicable).
+GeneralFilter - A class that represents a general filter object. The general filter does not filter the files
+                in any way, but just returns all the files in the directory.
+NegFilter - A specific type of filter decorator - returns all the files that do NOT pass the filter.
+
+    **** permissionFilters package ****:
+    PermissionFilter - A class representing filters that filter according to the permissions that a file has.
+    Executable - A class representing a filter that filters files according to whether
+                 or not they are executable.
+    Hidden - A class representing a filter that filters files according to whether or not they are hidden.
+    Writable - A class representing a filter that filters files according to whether or not they are writable.
+
+    ***** sizeFilters package *****
+    SizeFilter - A class representing filters that filter according to the the size of files.
+    BetweenFilter - A filter that filters files according to whether or not the size of the files
+                    are between two values.
+    GreaterThan - A filter that filters files according to whether or not the size of the files are
+                  greater than a given value.
+    SmallerThan - A filter that filters files according to whether or not the size of the files are
+                  smaller than a given value.
+
+    **** textFilters package *****
+    TextFilter - A class representing filters that filter files according to a String of character
+                 that appear in the file name.
+    Contains - A filter object that filters file according to whether or not a given String of characters
+               is contained in the file name.
+    file - A filter object that filters file according to whether or not a given String of characters
+           is the name of the file name.
+    Prefix - A filter object that filters file according to whether or not a given String of characters
+             is the prefix of the file name.
+    Suffix - A filter object that filters file according to whether or not a given String of characters
+             is the suffix of the file name.
+
+**** orderPackage: ****
+Order - An interface for an Order object which orders files according to given parameters.
+OrderDecorator - A class that allows to add decorators to an order object.
+OrderFactory - A factory that creates order items according the given parameters
+               (and decorators, if applicable).
+AbsOrder - A class that represents an abs order object. This order sorts the files by absolute name,
+           going from 'a' to 'z'.
+SizeOrder - A class that represents an order object. This order sorts files according to the file size.
+TypeOrder - A class that represents an order object. This order sorts files according to the file type.
+ReverseOrder - A specific type of order decorator - returns all the files that in a reverse order.
+
+
+
+=============================
+= Design =
+=============================
+
+While designing our program we made sure to follow the the design principles below:
+
+    * Modularity: The program is composed of many different sections, where each one is in charge of a specific
+      task. The sections are divided into three main packages, and in the case of the filter package, we added
+      three more sub-packages inside this class (each representing a different type of filter.)
+
+    * Independence: Many of the subsections are independent of each other. For example, the order package
+      doesn't not need to "know" of the existence of the filter package, and vice versa.
+
+    * Inheritance: In the filter and order packages, we created a hierarchy of classes. At the top of the
+      hierarchy we have a filter/order interface. Below the interface, we have a general filter/order that
+      implement the interface. Then, below them, we have other class that extend these general filter. These
+      are placed in individual packages, too. In each of the packages (permissionFilters, sizeFilters, and
+      textFilters) we have an abstract filter, which more concrete filters extend. For example, the
+      greaterThan, smallerThan, and between filter each inherit from the abstract sizeFilter. The prefix,
+      suffix, file, and contains filter all inherit from the TextFilter. And lastly, the hidden, executable,
+      and writable filters all inherit from the PermissionFilter.
+
+    * Factory design pattern: For both the filters and the orders we created a factory that generates the
+      order or filter objects.
+
+    * Easy to maintain and update the code: Since the code is very modular, in the future someone
+      can easily add more parts to the code, without needing to change much. For example, if someone would
+      like to add a filter that checks if a file is readable, all they need to do is create another class
+      that inherits from the permission filter. The only change they will need to add to the existing code is
+      in the filter factory (adding another switch case).
+
+    * The open-closed principle: As mentioned in the previous point, our code is opened to extension, but can
+      be closed for modification (accept for small changes in the factory classes). This also sits well with
+      the single-choice principle, since if we updated the code by adding more filters or orders, only the
+      factories know of all the different existing types of filters and orders, and only they need to be
+      changed.
+
+    * Understandability - We tried to make each of the classes understandable without needing to know much
+      about the other sections. The rule of thumb we learned in class was that we can describe each module in a
+      few words. The short descriptions above (the first part of the README) show that, in fact, we are able to
+      describe each module in just a few words.
+
+
+    The more specific design patters of each of the sections are described in the implementation section.
+
+
+
+
+=============================
+= Implementation details =
+=============================
+
+Since this program has many parts, in order to abide by the modularity principle, we created three
+main packages. Here is a short description of the implementation choices we made in each of the packages:
+
+---- File processing package ---
+
+This package is the main package of the program.
+The DirectoryProcessor contains the main function, and a doCommand() function. The doCommand() is what pulls
+all the parts of the program together. It first calls the parsing class (ParseData), and then when it gets an
+array of sections (each section contains a filter and an order) it prints the names of all the files that were
+filtered and ordered.
+
+The ParseData class is in charge of parsing the command file and the directory source, while throwing
+exceptions if specific errors occur.
+    * Parsing the directory source: the parseDirectory() function creates a list of all the files, but then
+      filters out directories that aren't files, and only returns an array that includes files.
+    * Parsing the command file: the parseCommandFile() function uses a buffered reader to read the lines of
+      command file. This function includes checking to make sure that the format of the file is correct (has
+      a legal FILTER and an ORDER section), and then calls a createFilter() and createOrder() function. These
+      two function return a filter and order, respectively. These two objects are then used to create a
+      Section. The section is added to a section array, and is then returned.
+
+      The createFilter() and createOrder() function get the instruction line that appeared in the command
+      file. They parse the data (by the # sign) and then call the filter factory and order factory to create
+      the correct object. In addition, they check to see if a decorator (NOT or REVERSE) needs to be added to
+      the object.
+
+
+***************************************************************
+--- Filter package ---
+
+    A graphic description of the hierarchy of the filter package:
+
+                        Filter interface
+                       /                \
+                      /                  \
+                     /                    \
+                    /                      \
+               General Filter          Filter Decorator
+              /        |      \              |
+             /         |       \             |
+       size filters    |        \       NOT decorator
+                  text filters   \
+                          permission filters
+
+
+    This package holds a Filter Interface which all the other filter classes implement. The filter interface
+    has three methods:
+        * isPass() - a function that each filter implements, returning true only for files that pass a
+          filter's criteria.
+        * getNumOfParams() - a function that gets the number of parameters a given filter is supposed to
+          receive.
+        * printError() - a function that prints a Type One Exception that could be thrown while creating a
+          filter object.
+
+    Below the filter interface of the hierarchy we have a General Filter. This class implements the functions
+    in the interface, along with other function that it's children will use.
+    There are three abstract classes that inherit from the general filter - size filters, text filters, and
+    permission filters. These three types of filters are each saved in their own package (again - to abide by
+    the modularity principle). Each of these class has functions that check if the parameters that were
+    received are legal for that type of filter. For example: the size filter class makes sure the parameters
+    we got are not negative.
+    Then, inside of each these packages we have the specific filters we needed to implement in this exercise.
+    Due to the hierarchy we created, the actual individual filters do not have much code in them. The main
+    element that differs between each of the filters is the isPass() method.
+
+    In addition to the General Filter branch of the hierarchy tree, we also have a filter decorator class that
+    implement the filter interface. The Filter decorator class acts as the connector between the filter and
+    the decorator we add. We can compare the decorator to the "plug and cord" concept which was described in
+    the lecture. The Filter Decorator class is the extension cord.
+    A NegFilter extends the filter decorator. This filter runs the same doFilter() method that the General
+    Filter implements, but instead only adds files to the filtered array if they DO NOT pass the filter.
+
+    In addition to the filter interface, we also have FilterFactory class. This class contains of a single
+    function getFilter() which is called from the ParseData function when creating a filter.
+    The factory includes a list of switch cases, each one getting a name of a type of filter, and creating
+    that filter. In addition, this function catches possible exceptions, and if a Type One Exception is
+    caught, it creates a default filter, which is the General Filter (returns all the files).
+
+
+***************************************************************
+
+---- Order package ---
+
+    The order package has a very similar structure to the filter package.
+
+                            Order interface
+                           /                \
+                          /                  \
+                         /                    \
+                        /                      \
+                   Abs Order              Order Decorator
+                  /        |                    |
+                 /         |                    |
+           size order      |             REVERSE decorator
+                       type order
+
+
+    All the classes (except for the factory order) implement the Order Interface. An abs order sorts
+    the files by absolute name, going from 'a' to 'z'. The abs order is used in a number of cases:
+        * the input in the command file called for an abs order
+        * there was no order input in the command file
+        * there was an illegal order input in the command file
+        * if two files are equal regarding size or type, they are then sorted by the abs order.
+    All these reasons made us decide to not have a general order (the same way we had a general filter).
+    Instead, the default order (and the class that the other order classes inherit from ) is an abs order.
+
+    In addition to the three types of orders - size, type, and abs - the package also contains an
+    Order Decorator class. This class acts at the "extension cord" when adding a decorator onto an existing
+    order. In our case, the decorator is a ReverseOrder - this class inherits from the Order Decorator and
+    implements the order() function with an additional call to reverse the order of the file array.
+
+    This package also contains an order factory, which has a switch case calling for the creating of
+    the different order types, based on the input in the command file. The factory also check if the order it
+    needs to return needs to be decorated with a reverse order.
+
+=============================
+= Answers to questions =
+=============================
+
+Exceptions:
+We created two exception classes - TypeOneExceptions and TypeTwoExceptions. Each of these classes holds
+variables representing the different messages that the exception can print. The type one exception gets the
+line number on which the error occurred. The type two exceptions gets a parameter that signals what
+message should be printed when the exception is thrown.
+
+If an error, that doesn't cause the program to stop running, occurs while creating a filter or order section,
+the error is then associated with that object. Then, when we call the runSection() method from the Section
+class, in addition to filtering and ordering the files, the method also prints the errors that are related to
+that section. Doing it this way allows us to print each section with its warnings and not printing all the
+warnings in the beginning.
+
+We chose to not make additional exception class for each of the sub-types of errors the program can have. We
+thought that since all the sub type of errors do the same thing (type one - print a standard message, and
+type two print an informative message and return), there was no need to create individual classes. Instead we
+made "magic number" variables in the type two class that print the informative message. In the type one
+exceptions we have a line counter (that increases every time the buffer reader moves forwards) that prints the
+line in which the warning occurred.
+
+Data structures:
+We chose to use an ArrayList for storing our files. We decided to use this data struture since it is ordered
+(unlike a set, for example), and order is very important in this exercise, and it is not static. In other
+words, we don't need to determine ahead of time the size of the array, but rather we can change it as the
+program runs.
