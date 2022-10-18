@@ -1,0 +1,73 @@
+gerliron18
+308350503
+Liron Gershuny
+
+
+=============================
+=      File description     =
+=============================
+SpaceShip.java - Implementation of the Space crafts API as an abstract class.
+SpaceShipFactory.java - Implementation of the class that manage the arguments given by the user
+                        when initializing the SpaceWars game.
+HumanShip.java - Implementation of the human control spaceship.
+DrunkardShip.java - Implementation of the drunk pilot spaceship.
+RunnerShip.java - Implementation of the runner spaceship.
+BasherShip.java - Implementation of the bashing spaceship.
+AggressiveShip.java - Implementation of the aggressive spaceship.
+SpecialShip.java - Implementation of the special spaceship.
+
+
+=============================
+=          Design           =
+=============================
+The design factor I chose to work with is using inheritance -
+As it explained at the exercise instructions, the SpaceWars java class uses the SpaceShip java class to
+run the game and I needed to implement few different kinds of space crafts so I decided to implement
+all the general methods that I knew all the different space crafts will use also. Then I chose to
+implement this class as an abstract one because the relationship between this general class with all
+kind of pilots is that they are all kind of spaceships and should behave the same except for their decisions
+using or not the equipment and choose how to "fly" at the board game.
+So, to use this kind of design I implement the "DoAction" method as general as I could and make it call
+a specific method that I added.
+In Addition, to make the specific behavior for each space craft I implemented the specific action method as
+a protected one so all the space craft classes use overriding for this method and implements it's own.
+Extensibility - This design helps to add functions or features because if the programmer want to add something
+                that all kind's of spaceships need to know he can add it at the SpaceShip class and all
+                of them will act with it.
+Modularity - The division at that design is very clear so that all the functions and features that are shared
+             by all the spaceships are all together implemented at the SpaceShip class but any feature that
+             is unique to one kind of spaceship is implemented at the separate class.
+Intuitiveness - When it's clear to the programmer that any kind of the specific ships are kind of general
+                space craft and all of them share the same features it will be very easy to understand that
+                this kind of design helps to make separations between features that are equals to all
+                spaceships and which are unique and should be implemented separately.
+Representation of the classes and their relationships - As for the abstract design method,
+               the contract between the main SpaceShip class and each of the inherit ships is that they have
+               to implement the specific behavior at the game board. That's make sense because it is the only
+               functionality that different at each on of them.
+
+
+=============================
+=  Implementation details   =
+=============================
+DrunkardShip - This pilot drunk too much so he is very dizzy, I implemented this ship using randomness as the
+               instructions ask me to so that, for general, its turn is to the right and the choose if to
+               accelerate or not to is by random. After I checked this implementation I felt dizzy myself
+               so I decided that in every round number that is divided by 90 the pilot hiccup and the ship
+               will turn left with ne acceleration and will try to open fire. In addition, in every round
+               I use randomness to choose if the pilot want to try teleporting or not.
+
+SpecialShip - This pilot hacked to the computer of his spaceship! I implemented this ship so it has no
+              energy limitations when trying to teleport and fire. In general, this pilot is try to control
+              the universe so he is almost 100% invincible- he will fire all the time and chase the nearest
+              ship to him and like the runner ship every time he feels threatened the pilot will press
+              the teleport button. But, this ship has one large vulnerability and that is that he lost his
+              shield in space when hacking the computer so he can be damaged every time colliding with another
+              spaceship and when he got shot- If you want to win it, chase him (but not too close so he wont
+              teleport) from behind and fire the hell out of him!
+
+
+=============================
+=    Answers to questions   =
+=============================
+All answers to questions marked at the exercise instructions were answered above.
