@@ -1,0 +1,133 @@
+gerliron18
+308350503
+Liron Gershuny
+
+* I discussed with Dror Bar on this exercise
+
+=============================
+=      File description     =
+=============================
+SimpleHashSet.java - An abstract class which the OpenHash and the ClosedHash implement it.
+
+OpenHashSet.java - Implementation of a hash table which allows save more then one value at a cell,
+                   uses linked lists at each cell.
+
+LinkedListWrapper.java - Implementation of a helper class to the OpenHash table that manage a linked list
+                         of each cell at the table.
+
+ClosedHashSet.java - Implementation of a hash table which allows save only one value at a cell.
+
+ClosedCubicle.java - Implementation of a helper class to the ClosedHash table that manage one cell.
+
+CollectionFacadeSet.java - A facade class that implements SimpleSet so that we can compare our sets to
+                           java's collections sets.
+
+SimpleSetPerformanceAnalyzer.java - An analyzer class that use to compare running time between different
+                                    kind of sets.
+
+RESULTS - A doc file which present run time comparison between the sets we worked with.
+
+
+=============================
+=          Design           =
+=============================
+The design of this program uses is that there is one class- the SimpleHashSet that implemented as an abstract
+class which the OpenHash and the ClosedHash tables inherit from. It will declare all the needed methods e.g
+add, delete, size and so on and the specific implementation will be at the tables classes.
+
+I chose to implement 2 helper classes- LinkedListWrapper and ClosedCubicle which manage a specific behavior
+of each cell at the table.
+LinkedListWrapper will manage the cells of the OpenHash table because it allows more then one value to be
+saved at a specific cell. I chose it to be saved as a linked list so it will be easier to add and remove from
+and moreover, the set is implemented by java.
+ClosedCubicle manage the cells of a ClosedHash table which not allows more then one value for each cell so
+if the cell is not empty the hash code will see it and calculate a new value to put the value in the
+appropriate cell, moreover, in order to search for a value at the table it allows each cell to know if
+value was deleted from it and the delete or the contain methods could search for it at another cells.
+
+=============================
+=  Implementation details   =
+=============================
+The implementation of OpenHash set:
+This table is an hash one that allows more then one value to be saved in each cell, for that reason I needed
+to decide how to save a list of values in each cell- I chose the option of linked lists so the implementation
+of this class include an helper class that implements linked list method.
+So, first I'm creating a new table that includes linked list for each of it cells.
+To calc the hash value for a given argument it uses the clamp method implemented by SimpleHashSet.
+Additionally, the class has a getter for it's capacity and it implements a specific addition and deletion
+methods that override the implementation of SimpleHashSet.
+The contain method uses contain method of linked list, all the third addition, deletion and contain will not
+iterate over all the table but only calc the hash code of the specific value and then search for it at the
+table.
+Moreover, this class implements a resizing method which responsible to change the table length according
+to the upper and lower factors and the number of values saved in it- it will save all the data saved in the
+table at the very moment in a linked list, clear the table and then iterate over the saved data, hash code
+for each value and insert it to the new table.
+
+The deletion mechanism at the ClosedHash set:
+As mentioned above, this table can save only one value at each cell so to implement the deletion method I
+chose to be in control of each cell meaning all the manage of a cell will taking care at the ClosedCubicle
+class that saves a "flag" if this cell was drained meaning that a value was kept in it and deleted from it.
+So, lets say we want to delete a value from the closed table- first, we will save the number of attempt
+starting at zero, then we will call the hash code calculator with the number of attempt,
+if the cell at the hash code value spot is equal to the value we are searching for we will delete it from
+the cell, remember to change the flag to drained cell. If the cell is empty or if the value that in it is not
+equals to the given value it means that it saved at another cell so we will increase the number of attempt by
+one and start all over again till we find it. We assume that the given value is a value that we know is inside
+the table.
+
+The results of the analysis:
+* All the running time is written at the RESULT file, here I will declare the fastest set I implemented
+  meaning the OpenHash or the ClosedHash (there is a gap between the running time at my laptop using Windows
+  and the aquarium computers using Linux).
+Insertion of data1 - OpenHash set at 24843.880758 ms
+Insertion of data2 - ClosedHash set at 22.441917 ms
+Check if "hi" is contained in data1 - ClosedHash set at 16.34264 ns
+Check if "-13170890158" is contained in data1 - OpenHash set at 383626.22896 ns
+Check if "23" is contained in data2 - ClosedHash set at 28.94706 ns
+Check if "hi" is contained in data2 - OpenHash set at 10.93202 ns
+
+The number of iterations at my warm-up phase:
+After a few tests of analysis I chose 50,000 to be the sum of iterations when it's needed to be warmed cause
+I found it is produce the shortest running times in average.
+
+=============================
+=    Answers to questions   =
+=============================
+Bad result for data1 using OpenHash set:
+The slowest it runs is for searching the negative number and that's because it hashed to the same code as for
+all data1 values. The worst result for me was: 415714.8355 ns.
+
+Bad result for data1 using ClosedHash set:
+Just like the OpenHash set the slowest it runs is for searching the negative number and that's for the same
+reason. The worst result for me was: 4152163.94430 ns.
+
+According to the results it seems that the java collection hash set is the fastest for all reasons.
+The strength of the OpenHash set is to see if a value is contained in it knowing that the hash code of the
+given value is not equals all of his values. The weakness of the OpenHash set is when searching for a value
+that his hash code is equals to all of his cells.
+The strength of the ClosedHash set is to search if a value is contain at the table even if it's not containing
+it. The weakness of ClosedHash set is when you need to add a large amount of data to it.
+The strength of the TreeHash set is by inserting data to it, larger it will be.
+The weakness of the TreeHash set is when you need to search for a value that his hash code is equals to all
+the data hash codes.
+The strength of LinkedLists set is when you need to search for a value that you know is inside the lists.
+The weakness of the LinkedLists set is is when you need to search for a value that his hash code is equals
+to all the data hash codes.
+The strength of Java's Hash set is insert a large amount of data to it.
+The weakness of Java's Hash set is by searching for a value you know is inside the table data.
+
+My two implementations compare is not clear, there are few tests that the Open set run faster then the Closed
+one and there are opposite, e.g for searching "hi" at data2 it takes 3 times slower at the Closed set
+but for the search for "23" it's nearly the opposite.
+
+My two implementations comparing to Java's is that my implementations can win for some tests but in an overall
+view Java's will win- I'm not pretending to be better at first year;-)
+
+But, surprisingly, after we learned so much about LinkedLists, it's seems that the LinkedList set of Java
+and maybe other implementations is not the best choice to work with in comparison to the Tree set and
+the Hash one at least for a big amount of data.
+I expected the results of searching the negative value at data1, it's reflected that the gap between searching
+in an Open vs Closed hash is a big one because the value has the same hash code like every value in the table
+so it means that the Closed hash grow bigger and bigger when the Open hash only uses one cell without resizing
+the table.
